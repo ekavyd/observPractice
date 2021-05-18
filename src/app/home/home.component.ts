@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { interval, Subscription, Observable } from 'rxjs'
+import { map, filter } from 'rxjs/operators'
+
 
 @Component({
   selector: 'app-home',
@@ -34,8 +36,34 @@ private firstObsSub: Subscription;
       }, 1000);
     });
 
+    //operator example -- used to process observable data before passing to Observer ---MAP OPERATOR
+    //to use add onto subscription call in place of observable name
+    let newPipe = customIntervalObs.pipe( map( (data : number) => {
+      return 'Round:' + (data + 1);
+    }));
+
+    //filter operator -- return true or false base on evaluation logic
+    let filterPipe = customIntervalObs.pipe(filter(data => {
+      return data >2;
+    }));
+
+    // Observable using pipe/map function
+    // this.firstObsSub = customIntervalObs.pipe( map( (data : number) => {
+    //   return 'Round:' + (data + 1);
+    // })).subscribe( data => {    //data rcv'd clause
+    //   console.log(data);
+    // }, error => {     //error clause
+    //   console.log("logging ERROR");
+    //   alert(error.message);
+    // }, () => {  //example of completion clause
+    //   console.log("COMPLETED");
+    // })
+
+
+
+
     // subscribing to defined observable :: Argument is arrow function to handle recieved data
-    this.firstObsSub = customIntervalObs.subscribe( data => {    //data rcv'd clause
+    this.firstObsSub = filterPipe.subscribe( data => {    //data rcv'd clause
       console.log(data);
     }, error => {     //error clause
       console.log("logging ERROR");
